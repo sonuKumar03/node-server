@@ -3,6 +3,22 @@ const router = express.Router();
 const conn = require('../../db/index');
 const mysql = require('mysql')
 
+let id_check =(req,res,next)=>{
+    const { id } = req.params;
+    if (!id) {
+      return res.json({ err: "id is required" });
+    }
+    let check_id_query = "SELECT vendor_id from st_customer_info WHERE id=?";
+    conn.query(check_id_query,[id],(err,results,fields)=>{
+      if(err){
+        return res.json({ message:"internal error occured ",error:err})
+      }
+      if(results.length==0){
+        return res.json({ message:" customer of provided id doesn't exit " });
+      }
+      next();
+    })
+}
 router.get('/', (req, res) => {
     let sql = "SELECT * FROM st_customer_info ";
     conn.query(sql, (err, results, fields) => {
@@ -14,10 +30,10 @@ router.get('/', (req, res) => {
         }
     })
 })
-
 // add one customer
 router.post('/', (req, res) => {
     let { customer } = req.body;
+    const email = customer;
     if (!customer) {
         return res.status(406).json({ err: "provide customer details" });
     }
@@ -37,7 +53,6 @@ router.post('/', (req, res) => {
     })
     return res.json({ msg: "add one customer" })
 })
-
 router.get('/:id', (req, res) => {
     const { id } = req.params;
 
@@ -54,7 +69,7 @@ router.get('/:id', (req, res) => {
 })
 
 
-router.patch('/:id', (req, res) => {
+router.patch('/:id',id_check,(req, res) => {
     const { id } = req.params;
     const { customer } = req.body;
     if (!customer) {
@@ -82,7 +97,7 @@ router.patch('/:id', (req, res) => {
     }
 })
 
-router.delete('/:id', (req, res) => {
+router.delete('/:id', id_check,(req, res) => {
     const { id } = req.params;
     if (!id) {
         return res.status(404).json({ message: "id is required" });
