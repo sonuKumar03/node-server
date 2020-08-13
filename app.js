@@ -10,12 +10,12 @@ var expensesRouter = require('./routes/expenses');
 var manufacturingRouter = require('./routes/manufacturing');
 var paymentsRouter = require('./routes/payments');
 var productionsRouter = require('./routes/productions');
-var productsRouter = require('./routes/products');
+var productsRouter = require('./routes/product_category');
 var purchasesRouter = require('./routes/purchases');
 
 
 var ready_stocksRouter = require('./routes/ready_stocks');
-var raw_stocksRouter =   require('./routes/raw_stocks');
+var raw_stocksRouter = require('./routes/raw_material_stocks');
 var receiptsRouter = require('./routes/receipts');
 var transportationsRouter = require('./routes/transportations');
 var usersRouter = require('./routes/users');
@@ -36,19 +36,19 @@ app.use(express.static(path.join(__dirname, "public")));
 
 //routes 
 app.use("/", indexRouter);
-app.use("/customers", customersRouter );
-app.use("/employees", employeesRouter );
-app.use("/expenses", expensesRouter );
-app.use("/manufacturing", manufacturingRouter );
-app.use("/payments", paymentsRouter );
-app.use("/productions", productionsRouter );
-app.use("/products", productsRouter );
-app.use("/purchases", purchasesRouter );
-app.use("/ready_stocks", ready_stocksRouter );
-app.use("/raw_stocks", raw_stocksRouter );
-app.use("/receipts", receiptsRouter );
+app.use("/customers", customersRouter);
+app.use("/employees", employeesRouter);
+app.use("/expenses", expensesRouter);
+app.use("/manufacturing", manufacturingRouter);
+app.use("/payments", paymentsRouter);
+app.use("/productions", productionsRouter);
+app.use("/product_category", productsRouter);
+app.use("/purchases", purchasesRouter);
+app.use("/ready_stocks", ready_stocksRouter);
+app.use("/raw_stocks", raw_stocksRouter);
+app.use("/receipts", receiptsRouter);
 app.use("/transportations", transportationsRouter);
 app.use("/users", usersRouter);
 app.use("/vendors", vendorsRouter);
 
-module.exports =app;
+module.exports = app;

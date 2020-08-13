@@ -9,8 +9,8 @@ router.get('/',(req,res)=>{
         if(err){
             return res.status(501).json({message:"error occured on our side ",error:err});
         }else{  
-         let product_categorys =  results.map(row=>({...row}));
-            return res.json({product_categorys})        
+         let product_categories =  results.map(row=>({...row}));
+            return res.json({product_categories})        
         }
     })
 })
@@ -24,30 +24,31 @@ router.post('/',(req,res)=>{
     let columns = Object.keys(product_category);
     let col = columns.join(',');
     console.log(columns);
-    let query = "INSERT INTO st_product_category_info("+columns+") VALUES";
+    let query = "INSERT INTO st_product_category("+columns+") VALUES";
     let values = Object.values(product_category);
     let qs = columns.map((t)=>"?").join(',');
     query+="("+qs+")";
     conn.query(query,values,(err,results,fields)=>{
         if(err){
             console.log(err);
+            return res.json({message:"product_category not added ",error:err})
         }else{
             console.log(results);
+            return res.json({msg:"add one product_category"})
         }
     })
-    return res.json({msg:"add one product_category"})
 })
 
 router.get('/:id',(req,res)=>{
     const {id} = req.params;
 
-    let sql = "SELECT * FROM st_product_category_info WHERE id=?";
+    let sql = "SELECT * FROM st_product_category WHERE id=?";
     conn.query(sql,[id],(err,results,fields)=>{
         if(err){
             console.log(err);
             return res.status(404).send("product_category not found");
         }else{
-         let product_category =  results.map(row=>({...row}));
+         let product_category =  results.map(row=>({...row}))[0];
             return res.json({product_category})        
         }
     })
@@ -60,7 +61,7 @@ router.patch('/:id',(req,res)=>{
     if(!product_category){
         return res.status(406).send("details not provided ");
     }
-    let query = "UPDATE st_product_category_info SET ";
+    let query = "UPDATE st_product_category SET ";
     let values = [];
     Object.entries(product_category).forEach((update) => {
       query += `${update[0]}=?,`;
@@ -87,7 +88,7 @@ router.delete('/:id',(req,res)=>{
     if (!id) {
       return res.status(404).json({message: "id is required" });
     }
-    let sql = "DELETE from st_product_category_info WHERE id=? ";
+    let sql = "DELETE from st_product_category WHERE id=? ";
     conn.query(sql, [id], (err, results, fields) => {
       console.log(results);
       return res.status(200).json({message:"done"});

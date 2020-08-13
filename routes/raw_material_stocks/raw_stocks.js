@@ -17,35 +17,35 @@ router.get('/',(req,res)=>{
 
 // add one raw_material
 router.post('/',(req,res)=>{
-    let {raw_material} = req.body;
-    if(!raw_material){
-        return res.status(406).json({err:"provproduct_ide raw_material details"});
+    let {raw_material_stock} = req.body;
+    if(!raw_material_stock){
+        return res.status(406).json({err:"provite product raw_material details"});
     }
-    let columns = Object.keys(raw_material);
+    let columns = Object.keys(raw_material_stock);
     let col = columns.join(',');
     console.log(columns);
     let query = "INSERT INTO st_raw_material_stock("+columns+") VALUES";
-    let values = Object.values(raw_material);
+    let values = Object.values(raw_material_stock);
     let qs = columns.map((t)=>"?").join(',');
     query+="("+qs+")";
     conn.query(query,values,(err,results,fields)=>{
         if(err){
             console.log(err);
+            return res.json({message:"raw_material not added",error:err})
         }else{
             console.log(results);
+            return res.json({message:"add one raw_material"})
         }
     })
-    return res.json({msg:"add one raw_material"})
 })
 
 router.get('/:product_id',(req,res)=>{
     const {product_id} = req.params;
-
     let sql = "SELECT * FROM st_raw_material_stock WHERE product_id=?";
     conn.query(sql,[product_id],(err,results,fields)=>{
         if(err){
-            console.log(err);
             return res.status(404).send("raw_material not found");
+            console.log(err);
         }else{
          let raw_material =  results.map(row=>({...row}));
             return res.json({raw_material})        
