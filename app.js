@@ -2,7 +2,6 @@ var express = require("express");
 var path = require("path");
 var cookieParser = require("cookie-parser");
 var logger = require("morgan");
-
 var indexRouter = require("./routes/root");
 var customersRouter = require('./routes/customers');
 var employeesRouter = require('./routes/employees');
@@ -24,7 +23,6 @@ var vendorsRouter = require('./routes/vendors');
 var cors = require("cors");
 
 var app = express();
-
 
 app.use(cors());
 app.use(logger("dev"));

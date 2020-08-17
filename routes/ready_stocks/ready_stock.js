@@ -75,6 +75,7 @@ router.post("/", (req, res) => {
 router.patch("/:id", id_check,(req, res) => {
   const { id } = req.params;
   const { ready_product } = req.body;
+  console.log(id,ready_product);
   let keys = Object.keys(ready_product);
   let values = Object.values(ready_product);
   values.push(id);
