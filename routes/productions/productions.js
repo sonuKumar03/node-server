@@ -16,14 +16,16 @@ router.get('/', (req, res) => {
 })
 
 //
-router.get("/forTable", function(req, res) {
-    let categories_sql = "SELECT * from  st_production_info a INNER JOIN st_ready_product_stock b on a.ready_product_id=b.product_id inner join st_product_category c on b.product_category_id = c.id ";
-
+router.get("/forTable/:id", function(req, res) {
+    const { id } = req.params;
+    let categories_sql = "SELECT * from  st_production_info a left JOIN st_ready_product_stock b on a.ready_product_id=b.product_id left join st_product_category c on b.product_category_id = c.id ";
     conn.query(categories_sql, (err, results, fields) => {
         if (err) {
             return res.status(501).json({ message: "server error", error: err });
         }
-        return res.json({ tableData: results });
+        let tableData = results.filter(t => t.ready_product_id === Number(id));
+        console.log(tableData)
+        return res.json({ tableData });
     })
 });
 
@@ -33,12 +35,6 @@ router.post('/', (req, res) => {
     let { production } = req.body;
     if (!production) {
         return res.status(406).json({ err: "provide production details" });
-    }
-
-    let { production_date } = production;
-    production = { ...production,
-        entry_date_time: production_date,
-        production_date
     }
     let columns = Object.keys(production);
     let col = columns.join(',');
@@ -50,11 +46,12 @@ router.post('/', (req, res) => {
     conn.query(query, values, (err, results, fields) => {
         if (err) {
             console.log(err);
+            return res.json({ error: err })
         } else {
             console.log(results);
+            return res.json({ msg: "add one production" })
         }
     })
-    return res.json({ msg: "add one production" })
 })
 
 router.get('/:id', (req, res) => {
